@@ -222,10 +222,6 @@ artifacts/
 # Numpy artifacts from notebooks
 *.npy
 
-# Data folders (raw & processed should be local, not in repo)
-data/raw/
-data/processed/
-
 # Streamlit runtime cache
 .streamlit/
 
