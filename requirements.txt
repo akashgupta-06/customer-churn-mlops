@@ -1,0 +1,10 @@
+# pip install -r requirements.txt
+pandas
+numpy
+scikit-learn
+mlflow
+streamlit
+matplotlib
+seaborn
+imbalanced-learn
+joblib
