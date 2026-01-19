@@ -1,7 +1,8 @@
-# 📊 Customer Churn Prediction System (End-to-End ML + MLOps)
+# 📊 Customer Churn Prediction System (End-to-End ML + MLOps + Analytics)
 
-An industry-style, end-to-end Machine Learning system that predicts customer churn and delivers actionable business insights.
-This project goes beyond a notebook—it implements a **production-grade ML pipeline** with experiment tracking, automated preprocessing, model comparison, and a live prediction application using Streamlit.
+An industry-style, end-to-end Machine Learning and Analytics system that predicts customer churn and delivers actionable business insights.
+
+This project goes beyond notebooks—it implements a **production-grade ML pipeline**, a **business analytics layer**, automated preprocessing, experiment tracking, CI, and a live prediction application.
 
 ---
 
@@ -12,26 +13,29 @@ This project goes beyond a notebook—it implements a **production-grade ML pipe
 3. [System Architecture](#system-architecture)
 4. [Tech Stack](#tech-stack)
 5. [Project Structure](#project-structure)
-6. [Exploratory Data Analysis](#exploratory-data-analysis)
-7. [ML Pipeline](#ml-pipeline)
-8. [Model Training &amp; Evaluation](#model-training--evaluation)
-9. [Model Selection](#model-selection)
-10. [Live Prediction App](#live-prediction-app)
-11. [How to Run Locally](#how-to-run-locally)
-12. [Key Learnings](#key-learnings)
-
----
+6. [Business Analytics Layer](#business-analytics-layer)
+7. [Exploratory Data Analysis](#exploratory-data-analysis)
+8. [ML Pipeline](#ml-pipeline)
+9. [Model Training &amp; Evaluation](#model-training--evaluation)
+10. [Model Selection](#model-selection)
+11. [Power BI Dashboard](#power-bi-dashboard)
+12. [Live Prediction App](#live-prediction-app)
+13. [CI/CD](#cicd)
+14. [How to Run Locally](#how-to-run-locally)
+15. [Key Insight](#key-insight)
+16. [Final Recommendations](#final-recommendations)
+17. [Author &amp; Contact](#author--contact)
 
 ## Business Problem
 
-Customer churn directly impacts revenue.The objective of this system is to:
+Customer churn directly impacts revenue. The objective of this system is to:
 
 > Identify customers at high risk of churn and provide a data-driven foundation for proactive retention strategies.
 
 The solution must:
 
 - Detect churn patterns
-- Quantify risk
+- Quantify business risk
 - Train predictive models
 - Serve predictions in real time
 - Be reproducible and production-oriented
@@ -40,7 +44,7 @@ The solution must:
 
 ## Solution Overview
 
-This project implements a **full ML lifecycle**:
+This project implements a **full data-to-decision lifecycle**:
 
 - Business-driven EDA
 - Clean data contract
@@ -48,14 +52,15 @@ This project implements a **full ML lifecycle**:
 - Model training & evaluation
 - Experiment tracking with MLflow
 - Business-based model selection
+- Analytics dashboard for stakeholders
 - Real-time inference via Streamlit
+- CI for pipeline reliability
 
-It bridges **Data Analytics + Data Science + MLOps principles** in one cohesive system.
+It bridges **Data Analytics + Data Science + MLOps** in one cohesive system.
 
 ---
 
 ## System Architecture
-
 
 ```
      Raw Data
@@ -79,10 +84,11 @@ Production Model Artifact
    Predict Layer
 	↓
 Streamlit App (User Interface)
+	↓
+Power BI Dashboard (Business View)
 ```
 
 ---
-
 
 ## Tech Stack
 
@@ -91,46 +97,69 @@ Streamlit App (User Interface)
 - Scikit-learn
 - Imbalanced-learn (SMOTE)
 - MLflow (Experiment Tracking)
-- Streamlit (Application UI)
+- Streamlit (Inference UI)
+- Power BI (Business Dashboard)
 - Matplotlib, Seaborn
-- Joblib
+- GitHub Actions (CI)
 
 ---
-
-
 
 ## Project Structure
 
 ```
+
 customer-churn-mlops/
 │
 ├── data/
-│   └── processed/
-│       └── churn_clean.csv
+│ ├── raw/
+│ └── processed/
+│ 	└── churn_clean.csv
 │
 ├── notebooks/
-│   └── EDA.ipynb
+│ ├── 01_churn_eda.ipynb
+│ └── 02_churn_business_analytics.ipynb
+│
+├── dashboards/
+│  	└── customer_churn_dashboard.pbix
+│ 	└── dashboard_overview.png
 │
 ├── src/
-│   ├── ingestion.py
-│   ├── validation.py
-│   ├── preprocessing.py
-│   ├── train.py
-│   ├── evaluate.py
-│   └── predict.py
+│ ├── ingestion.py
+│ ├── validation.py
+│ ├── preprocessing.py
+│ ├── train.py
+│ ├── evaluate.py
+│ └── predict.py
 │
 ├── app/
-│   └── app.py
+│ ├── app.py
+│ └── streamlit_app.png
 │
+├── .github/workflows/ci.yml
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-
 ---
 
+## Business Analytics Layer
 
+A dedicated analytics layer translates data into business decisions:
+
+- Executive KPIs (Churn %, Revenue at Risk)
+- Segment analysis by:
+  - Contract type
+  - Tenure bucket
+  - Payment method
+- Revenue impact prioritization
+- Actionable retention insights
+
+Notebook: `notebooks/02_churn_business_analytics.ipynb`
+
+This makes the project equally strong for **Data Analyst** roles.
+
+---
 
 ## Exploratory Data Analysis
 
@@ -142,65 +171,62 @@ The EDA notebook:
 - Engineers business features
 - Produces a clean analytical dataset
 
-Key insights include:
+Key insights:
 
 - Month-to-month contracts show highest churn
 - Early-tenure customers are most vulnerable
-- Payment method strongly correlates with churn
-- Revenue risk is concentrated in early lifecycle
-
-This notebook acts as the **design document** for the ML system.
+- Payment method correlates strongly with churn
+- Revenue risk is concentrated early in the lifecycle
 
 ---
 
-
-
 ## ML Pipeline
 
-The production pipeline is modular and reproducible:
-
-1. **Ingestion** – Load clean dataset
-2. **Preprocessing** –
+1. Ingestion – Load clean dataset
+2. Preprocessing
    - Feature/target split
-   - Scaling & encoding
+   - Encoding & scaling
    - Stratified train-test split
    - Class balancing (SMOTE)
-3. **Training** – Train multiple models
-4. **Evaluation** – Business-relevant metrics
-5. **Artifact Creation** – Save model + preprocessor
-6. **Inference** – Predict on new customers
+3. Training – Multiple models
+4. Evaluation – Business-relevant metrics
+5. Artifact creation – Model + preprocessor
+6. Inference – Predict on new customers
 
 ---
 
 ## Model Training & Evaluation
-
-Two models were trained:
 
 | Model               | Accuracy | Precision | Recall | ROC-AUC |
 | ------------------- | -------- | --------- | ------ | ------- |
 | Logistic Regression | 0.74     | 0.50      | 0.78   | 0.85    |
 | Random Forest       | 0.76     | 0.56      | 0.56   | 0.82    |
 
-All experiments are tracked in **MLflow**, enabling:
-
-- Parameter logging
-- Metric comparison
-- Artifact management
-- Iterative experimentation
+All runs are tracked in **MLflow**.
 
 ---
 
 ## Model Selection
 
-Although Random Forest achieved slightly higher accuracy,**Logistic Regression was selected as the production model** because:
+Logistic Regression was selected because:
 
-- It captures **78% of churners** (higher recall)
-- It has better **ROC-AUC**
-- It aligns with the business goal:
-  > *“Do not miss customers who are about to leave.”*
-  >
+- Captures **78% of churners** (higher recall)
+- Better **ROC-AUC**
+- Aligns with business goal:
 
-This reflects real-world ML decision-making.
+> “Do not miss customers who are about to leave.”
+
+---
+
+## Power BI Dashboard
+
+An executive dashboard provides:
+
+- KPIs: Customers, Churn %, Revenue, Revenue at Risk
+- Drivers: Contract, Tenure, Payment Method
+- Interactive segmentation
+
+![1768766469095](image/README/1768766469095.png)
 
 ---
 
@@ -208,10 +234,10 @@ This reflects real-world ML decision-making.
 
 A Streamlit application provides:
 
-- Interactive customer input
+- Structured customer input
 - Real-time churn prediction
 - Probability + risk classification
-- Business-friendly output
+- Business-oriented recommendations
 
 Run:
 
@@ -219,8 +245,26 @@ Run:
 streamlit run app/app.py
 ```
 
-The app demonstrates how the ML system is consumed by end users.
+---
 
+## CI/CD
+
+GitHub Actions runs on every push:
+
+* Installs dependencies
+* Executes preprocessing
+* Trains model
+* Validates pipeline health
+
+This ensures:
+
+* Reproducibility
+* Early failure detection
+* Production discipline
+
+Workflow: `.github/workflows/ci.yml`
+
+---
 
 ## How to Run Locally
 
@@ -254,12 +298,42 @@ Open: `http://127.0.0.1:5000`
 
 ---
 
-## Key Learnings
+## Key Insights
 
-* Translating business questions into ML systems
-* Designing reproducible pipelines
-* Handling class imbalance in real data
-* Experiment tracking and model comparison
-* Schema parity between training and inference
-* Building an ML-powered application
-* Applying MLOps principles at entry level
+The single most critical insight from this system is:
+
+> **Month-to-month customers account for the highest churn (≈43%) and nearly 87% of total revenue at risk.**
+
+This reveals that churn is not evenly distributed—it is **concentrated in early-tenure, low-commitment customers**.Retention efforts should therefore focus on:
+
+- The first 6–12 months of the customer lifecycle
+- Customers on month-to-month contracts
+- High-risk payment method segments
+
+This insight directly informs where business teams should invest retention budgets.
+
+---
+
+## Final Recommendations
+
+Based on analytics and model outputs, the business should:
+
+1. Launch targeted retention campaigns for **month-to-month customers**
+2. Introduce onboarding and loyalty programs for customers in their **first 6 months**
+3. Use churn probability to prioritize **high-risk, high-value customers**
+4. Align retention spend with **revenue at risk**, not just churn count
+5. Integrate this system into CRM workflows for real-time decision support
+
+This transforms churn prediction from a technical model into a **revenue-protection engine**.
+
+---
+
+## Author & Contact
+
+**Akash Gupta**Aspiring Data Analyst / Data Scientist
+
+- Email: akashgupta010603@gmail.com
+- LinkedIn: https://www.linkedin.com/in/akashgupta06
+- GitHub: https://github.com/akashgupta-06
+
+This project was built to demonstrate real-world data analytics, machine learning, and MLOps capabilities in a production-style system.
